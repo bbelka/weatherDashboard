@@ -1,0 +1,15 @@
+#header{
+    background-color: darkslategray;
+    text-align: center;
+    font-weight: bolder;
+}
+
+#searchCol{
+    background-color: rgba(172, 226, 158, 0.431);
+    padding-left: 3%;
+}
+
+#displayCol{
+    background-color: lightyellow;
+    padding-right: 3%;
+}
