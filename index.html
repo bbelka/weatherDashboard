@@ -36,16 +36,18 @@
                 <div class="row">
                     <div class="col-md">
                         <form class="form-inline my-2 my-md-0">
-                            <input class="form-control mr-md-2" type="search" placeholder="City Name"
+                            <input class="form-control" id="searchField" type="search" placeholder="City Name"
                                 aria-label="Search">
-                            <button class="btn btn-primary my-2 my-md-0" type="submit">Search</button>
+                            <button type="submit" class="btn btn-primary" id="searchBtn">Search</button>
                         </form>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md">
-                        <!-- auto-populate with recents, random, top searches...?-->
+                    <div class="col-md" id="recentSearches">
+
+                        <!-- auto-populate with columns containing recents, random, top searches...?-->
+
                     </div>
                 </div>
 
@@ -58,8 +60,39 @@
             <div class="container">
 
                 <div class="row">
-                    <div class="col-md" id="currentWeather">
-                       
+                    <div class="col-md">
+                        <div class="row">
+                            <div class="col-md curr currWeath" id="city">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md curr currWeath" id="date">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md currWeath" id="currTemp">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md currWeath" id="currHumid">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md currWeath" id="currWind">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md currWeath" id="currUVI">
+
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
 
@@ -69,8 +102,19 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <!-- dynamically create 5 columns with 1 row per for days of week forecast -->
+                <div class="row" id="fiveDay">
+                    <!-- <div class="col-md">
+                        <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
+                            <div class="card-header">Header
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Some quick example text to build on the card title and make up the
+                                    bulk of the card's content.</p>
+                            </div>
+                        </div>
+
+                    </div> -->
+
                 </div>
 
             </div>
@@ -80,16 +124,19 @@
 
 
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.4.1.js"
-        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-        <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>

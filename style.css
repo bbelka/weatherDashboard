@@ -13,3 +13,13 @@
     background-color: lightyellow;
     padding-right: 3%;
 }
+
+.currWeath{
+    padding-bottom: 10px;
+    font-size: large;
+}
+
+#city{
+    font-size: x-large;
+    font-weight: bolder;
+}
