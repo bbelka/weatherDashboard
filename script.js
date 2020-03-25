@@ -12,9 +12,6 @@ var currUVIEl = $("#currUVI");
 var lat
 var lon
 var now = moment();
-var nowCheck = now.format('YYYY-MM-DD') + " 15:00:00";
-var x = 0
-
 $(document).ready(function () {
     console.log("Ready");
     displayDate();
@@ -23,11 +20,14 @@ $(document).ready(function () {
 
 searchBtn.on("click", function () {
     event.preventDefault();
+    now = moment();
     console.log("click");
     todayForecastSearch();
-
 });
 
+function displayDate() {
+    dateEl.html(now.format('dddd, MMMM D, YYYY'));
+};
 
 // Current weather search
 function todayForecastSearch() {
@@ -46,7 +46,7 @@ function todayForecastSearch() {
         currTempEl.html(temp + '&#8457;');
         currHumidEl.html(humidity + '%');
         currWindEl.html(wind + 'mph');
-        cityEl.prepend(response.name + " <br>");
+        cityEl.html(response.name + " <br>");
     }).then(function () {
         uviSearch();
         fiveDayForecastSearch()
@@ -67,6 +67,8 @@ function uviSearch() {
 
 function fiveDayForecastSearch() {
     // event.preventDefault
+    var nowCheck = now.format('YYYY-MM-DD') + " 15:00:00";
+    fiveDayEl.html("");
     var cityName = searchFieldEl.val().trim();
     var fiveDayQueryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=imperial&appid=96f595b81fd754dae6e47484245107c2";
     $.ajax({
@@ -74,9 +76,13 @@ function fiveDayForecastSearch() {
         method: "GET"
     }).then(function (response) {
         var hour = now.format("H");
+        console.log(response);
+        var x = 0
         do {
+            
             x = x + 1
             nowCheck = now.add(x, 'd').format('YYYY-MM-DD') + " 15:00:00";
+            console.log(nowCheck);
             for (var i = 0; i < response.list.length; i++) {
                 if (response.list[i].dt_txt === nowCheck) {
                     var newCol = $("<div class='col-md'>");
@@ -84,12 +90,15 @@ function fiveDayForecastSearch() {
                     var newCardHead = $('<div class="card-header">');
                     var newCardBody = $('<div class="card-body">');
                     var newCardText = $('<p class="card-text">');
+                    var newIcon = response.list[i].weather[0].icon;
+                    console.log(newIcon);
+                    var newAlt = response.list[i].weather[0].description;
                     var newTemp = Math.round(response.list[i].main.temp);
                     var newHumid = response.list[i].main.humidity;
-                    var nowHead = now.format('MMMM D');
+                    var nowHead = now.format('ddd, MMMM D');
                     newCardHead.append(nowHead);
                     newCard.append(newCardHead);
-                    newCardText.html('Temp: ' + newTemp + '&#8457;' + '<br>Humidity: ' + newHumid + '%');
+                    newCardText.html('<img src="http://openweathermap.org/img/wn/' + newIcon + '.png" alt=' + newAlt + '><br>Temp: ' + newTemp + '&#8457;' + '<br>Humidity: ' + newHumid + '%');
                     newCardBody.append(newCardText);
                     newCard.append(newCardBody);
                     newCol.append(newCard);
@@ -100,25 +109,3 @@ function fiveDayForecastSearch() {
         } while (x < 5);
     });
 };
-
-function displayDate() {
-    dateEl.html(now.format('dddd, MMMM D, YYYY'));
-};
-
-// function currTime() {
-//     $.each($(".description"), function () {
-//         
-//         var timeValue = $(this).attr('value');
-//         if (parseInt(timeValue) < parseInt(hour)) {
-//             $(this).addClass('past');
-//         }
-//         else if (timeValue === hour) {
-//             $(this).addClass('present');
-//         }
-//         else if (parseInt(timeValue) > parseInt(hour)) {
-//             $(this).addClass('future');
-//         };
-//     });
-//     setTimeout(refresh, 60000);
-// };
-// 5-day weather search
