@@ -13,6 +13,7 @@ var lat;
 var lon;
 var now = moment();
 var storageArray = [];
+var cityName = searchFieldEl.val().trim();
 
 //runs date display
 //runs recent searches recall
@@ -24,8 +25,11 @@ $(document).ready(function () {
 
 //not functioning
 //event listener for click on recent searches
-$(".list-group-item-action").click(function () {
-    alert('Clicked list.');
+$(document).on("click", ".list-group-item-action", function () {
+    event.preventDefault();
+    console.log($(this).text());
+    cityName=($(this).text());
+    todayForecastSearch();
 });
 
 //search click event 
@@ -45,6 +49,7 @@ function recentSearchClicked() {
 function searchBtnClicked() {
     event.preventDefault();
     now = moment();
+    cityName = searchFieldEl.val().trim();
     todayForecastSearch();
 };
 
@@ -72,8 +77,8 @@ function displayDate() {
 //then appends desired info to page
 //then fires UVI search, five day search, and unshifts latest search to top of local storage
 function todayForecastSearch() {
-    var cityName = searchFieldEl.val().trim();
-    var todayQueryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial&appid=96f595b81fd754dae6e47484245107c2";
+    
+    var todayQueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial&appid=96f595b81fd754dae6e47484245107c2";
     $.ajax({
         url: todayQueryURL,
         method: "GET"
@@ -96,7 +101,7 @@ function todayForecastSearch() {
 
 //UVI search
 function uviSearch() {
-    var uviQueryURL = "http://api.openweathermap.org/data/2.5/uvi?appid=96f595b81fd754dae6e47484245107c2&lat=" + lat + "&lon=" + lon
+    var uviQueryURL = "https://api.openweathermap.org/data/2.5/uvi?appid=96f595b81fd754dae6e47484245107c2&lat=" + lat + "&lon=" + lon
     $.ajax({
         url: uviQueryURL,
         method: "GET"
@@ -113,8 +118,7 @@ function fiveDayForecastSearch() {
     // event.preventDefault
     var nowCheck = now.format('YYYY-MM-DD') + " 15:00:00";
     fiveDayEl.html("");
-    var cityName = searchFieldEl.val().trim();
-    var fiveDayQueryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=imperial&appid=96f595b81fd754dae6e47484245107c2";
+    var fiveDayQueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=imperial&appid=96f595b81fd754dae6e47484245107c2";
     $.ajax({
         url: fiveDayQueryURL,
         method: "GET"
@@ -153,8 +157,8 @@ function fiveDayForecastSearch() {
 //fire storageRecall to refresh recent search list
 function storageUnshift() {
     console.log(storageArray)
-    console.log(searchFieldEl.val())
-    storageArray.unshift(searchFieldEl.val());
+    console.log(cityName);
+    storageArray.unshift(cityName);
     for (var i = 0; i < 5; i++) {
         localStorage.setItem(i, storageArray[i]);
     };
