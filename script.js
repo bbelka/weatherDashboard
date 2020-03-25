@@ -9,14 +9,16 @@ var currTempEl = $("#currTemp");
 var currHumidEl = $("#currHumid");
 var currWindEl = $("#currWind");
 var currUVIEl = $("#currUVI");
-var lat
-var lon
+var lat;
+var lon;
 var now = moment();
+var storageArray = [];
+
 $(document).ready(function () {
     console.log("Ready");
     displayDate();
+    storageRecall();
 })
-
 
 searchBtn.on("click", function () {
     event.preventDefault();
@@ -24,6 +26,19 @@ searchBtn.on("click", function () {
     console.log("click");
     todayForecastSearch();
 });
+
+function storageRecall() {
+    recentSearchesEl.empty();
+    storageArray = []
+    for (var i = 0; i < 5; i++) {
+        var item = localStorage.getItem(i);
+        var newLI = $('<li class="list-group-item">')
+        newLI.append(item);
+        recentSearchesEl.append(newLI);
+        storageArray.push(item);
+        console.log(storageArray);
+    }
+};
 
 function displayDate() {
     dateEl.html(now.format('dddd, MMMM D, YYYY'));
@@ -37,7 +52,6 @@ function todayForecastSearch() {
         url: todayQueryURL,
         method: "GET"
     }).then(function (response) {
-        console.log(response);
         lat = response.coord.lat;
         lon = response.coord.lon;
         var humidity = ("Humidity: " + Math.round(response.main.humidity));
@@ -50,7 +64,7 @@ function todayForecastSearch() {
     }).then(function () {
         uviSearch();
         fiveDayForecastSearch()
-    });
+    }).then(storageUnshift);
 };
 
 function uviSearch() {
@@ -59,7 +73,6 @@ function uviSearch() {
         url: uviQueryURL,
         method: "GET"
     }).then(function (response) {
-        console.log(response);
         var UVI = response.value;
         currUVIEl.html('UV index: ' + UVI);
     });
@@ -76,13 +89,10 @@ function fiveDayForecastSearch() {
         method: "GET"
     }).then(function (response) {
         var hour = now.format("H");
-        console.log(response);
         var x = 0
         do {
-            
             x = x + 1
             nowCheck = now.add(x, 'd').format('YYYY-MM-DD') + " 15:00:00";
-            console.log(nowCheck);
             for (var i = 0; i < response.list.length; i++) {
                 if (response.list[i].dt_txt === nowCheck) {
                     var newCol = $("<div class='col-md'>");
@@ -91,7 +101,6 @@ function fiveDayForecastSearch() {
                     var newCardBody = $('<div class="card-body">');
                     var newCardText = $('<p class="card-text">');
                     var newIcon = response.list[i].weather[0].icon;
-                    console.log(newIcon);
                     var newAlt = response.list[i].weather[0].description;
                     var newTemp = Math.round(response.list[i].main.temp);
                     var newHumid = response.list[i].main.humidity;
@@ -108,4 +117,15 @@ function fiveDayForecastSearch() {
             nowCheck = now.subtract(x, 'd').format('YYYY-MM-DD') + " 15:00:00";
         } while (x < 5);
     });
+};
+
+function storageUnshift() {
+    console.log(storageArray)
+    console.log(searchFieldEl.val())
+    storageArray.unshift(searchFieldEl.val());
+    for (var i = 0; i < 5; i++) {
+        localStorage.setItem(i, storageArray[i]);
+    };
+    console.log(storageArray);
+    storageRecall();
 };
