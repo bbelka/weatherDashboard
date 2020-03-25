@@ -14,25 +14,47 @@ var lon;
 var now = moment();
 var storageArray = [];
 
+//runs date display
+//runs recent searches recall
 $(document).ready(function () {
     console.log("Ready");
     displayDate();
     storageRecall();
-})
-
-searchBtn.on("click", function () {
-    event.preventDefault();
-    now = moment();
-    console.log("click");
-    todayForecastSearch();
 });
 
+//not functioning
+//event listener for click on recent searches
+$(".list-group-item-action").click(function () {
+    alert('Clicked list.');
+});
+
+//search click event 
+searchBtn.click(searchBtnClicked);
+
+//function intended for recent search click function
+function recentSearchClicked() {
+    console.log("click")
+    $(this).innerText = searchFieldEl.val();
+    console.log($(this).val());
+    console.log(searchFieldEl);
+}
+
+//search function
+//resets now variable
+//fires todayForecast Search
+function searchBtnClicked() {
+    event.preventDefault();
+    now = moment();
+    todayForecastSearch();
+};
+
+//recalls local storage to poulate recent search list
 function storageRecall() {
     recentSearchesEl.empty();
     storageArray = []
     for (var i = 0; i < 5; i++) {
         var item = localStorage.getItem(i);
-        var newLI = $('<li class="list-group-item">')
+        var newLI = $('<button type="button" class="list-group-item list-group-item-action">')
         newLI.append(item);
         recentSearchesEl.append(newLI);
         storageArray.push(item);
@@ -40,11 +62,15 @@ function storageRecall() {
     }
 };
 
+//displays date at top of page
 function displayDate() {
     dateEl.html(now.format('dddd, MMMM D, YYYY'));
 };
 
 // Current weather search
+//searches
+//then appends desired info to page
+//then fires UVI search, five day search, and unshifts latest search to top of local storage
 function todayForecastSearch() {
     var cityName = searchFieldEl.val().trim();
     var todayQueryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial&appid=96f595b81fd754dae6e47484245107c2";
@@ -63,10 +89,12 @@ function todayForecastSearch() {
         cityEl.html(response.name + " <br>");
     }).then(function () {
         uviSearch();
-        fiveDayForecastSearch()
-    }).then(storageUnshift);
+        fiveDayForecastSearch();
+        storageUnshift();
+    });
 };
 
+//UVI search
 function uviSearch() {
     var uviQueryURL = "http://api.openweathermap.org/data/2.5/uvi?appid=96f595b81fd754dae6e47484245107c2&lat=" + lat + "&lon=" + lon
     $.ajax({
@@ -78,6 +106,9 @@ function uviSearch() {
     });
 };
 
+//searches
+//then uses 15:00 as a on each consecutive day to select a record
+//then build cards with the pertinent data
 function fiveDayForecastSearch() {
     // event.preventDefault
     var nowCheck = now.format('YYYY-MM-DD') + " 15:00:00";
@@ -88,7 +119,6 @@ function fiveDayForecastSearch() {
         url: fiveDayQueryURL,
         method: "GET"
     }).then(function (response) {
-        var hour = now.format("H");
         var x = 0
         do {
             x = x + 1
@@ -119,6 +149,8 @@ function fiveDayForecastSearch() {
     });
 };
 
+//moves latest search item to local storage
+//fire storageRecall to refresh recent search list
 function storageUnshift() {
     console.log(storageArray)
     console.log(searchFieldEl.val())
